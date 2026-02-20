@@ -1,6 +1,7 @@
 version: '3.9'
 
 services:
+
   postgres:
     image: postgres:alpine3.22
     container_name: postgres-db
@@ -13,6 +14,18 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: spring-app
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mydb
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
+    ports:
+      - "8080:8080"
 
 volumes:
   pgdata:
