@@ -1,12 +1,4 @@
 spring:
-  application:
-    name: learning
-
-  datasource:
-    url: jdbc:postgresql://postgres:5432/mydb
-    username: myuser
-    password: mypassword
-    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
@@ -19,3 +11,14 @@ spring:
   sql:
     init:
       mode: always
+
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP-SERVERS}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: test-group
+      auto-offset-reset: earliest   # important to read existing messages
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
