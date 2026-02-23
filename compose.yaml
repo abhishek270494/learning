@@ -36,6 +36,21 @@ services:
     depends_on:
       - zookeeper
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: keycloak
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      #KC_HOSTNAME: keycloak
+    ports:
+      - "8008:8080"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    depends_on:
+      - postgres
+
   app:
     build: .
     container_name: spring-app
@@ -53,3 +68,4 @@ services:
 
 volumes:
   pgdata:
+  keycloak_data:

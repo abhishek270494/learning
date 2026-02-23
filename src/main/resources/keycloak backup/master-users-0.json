@@ -1,0 +1,26 @@
+{
+  "realm" : "master",
+  "users" : [ {
+    "id" : "ab00df88-3947-4884-97d8-b1a41036bdfb",
+    "username" : "admin",
+    "emailVerified" : false,
+    "createdTimestamp" : 1771829303188,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "e1787c17-8b27-4941-928a-ba1e446cfbdf",
+      "type" : "password",
+      "createdDate" : 1771829303519,
+      "secretData" : "{\"value\":\"FjsrHIsr8XvauFZK7Vp3B3fNKierbgy86jgmWMoCp59duT9uMoWAKhay50fvJC/iIsb3mj5blTkrbY3RyZp9lA==\",\"salt\":\"rxSjmxMHhLBihClPM+ZQ/g==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "admin", "default-roles-master" ],
+    "clientRoles" : {
+      "spring-realm-realm" : [ "view-identity-providers", "manage-users", "query-realms", "create-client", "view-realm", "manage-events", "manage-realm", "query-clients", "manage-clients", "manage-identity-providers", "view-clients", "view-authorization", "view-events", "query-users", "view-users", "query-groups", "manage-authorization" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  } ]
+}
