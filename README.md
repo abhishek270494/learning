@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a Spring Boot application that demonstrates a RESTful API for managing Todo items and integrates with Apache Kafka for messaging. It uses PostgreSQL as the primary database and supports running in Docker containers with a full development stack (Spring Boot app, PostgreSQL, Kafka, Zookeeper) orchestrated via Docker Compose.
+This project is a Spring Boot application that demonstrates a RESTful API for managing Todo items and integrates with Apache Kafka for messaging. It uses PostgreSQL as the primary database and supports running in Docker containers with a full development stack (Spring Boot app, PostgreSQL, Kafka, Zookeeper, and Keycloak for authentication) orchestrated via Docker Compose.
 
 ## Features
 
@@ -13,12 +13,13 @@ This project is a Spring Boot application that demonstrates a RESTful API for ma
 - Docker and Docker Compose support for easy setup
 - Profiles for local and Docker environments
 - Basic test setup with JUnit and Spring Boot Test
+- Keycloak integration for authentication and authorization
 
 ## Project Structure
 
 ```
 learning/
-├── compose.yaml                # Docker Compose configuration for app, DB, Kafka, Zookeeper
+├── compose.yaml                # Docker Compose configuration for app, DB, Kafka, Zookeeper, Keycloak
 ├── dockerfile                  # Multi-stage Dockerfile for building and running the app
 ├── pom.xml                     # Maven build configuration and dependencies
 ├── src/
@@ -42,7 +43,12 @@ learning/
 │   │   └── resources/
 │   │       ├── application.yaml                # Main Spring Boot config
 │   │       ├── application-local.yaml          # Local profile config
-│   │       └── application-docker.yaml         # Docker profile config
+│   │       ├── application-docker.yaml         # Docker profile config
+│   │       └── keycloak backup/                # Keycloak realm and user JSON files
+│   │           ├── master-realm.json
+│   │           ├── master-users-0.json
+│   │           ├── spring-realm-realm.json
+│   │           └── spring-realm-users-0.json
 │   └── test/java/com/example/learning/
 │       └── LearningApplicationTests.java       # Basic context load test
 └── ...
@@ -54,10 +60,11 @@ learning/
 - Spring Boot 4.x
   - Spring Web MVC
   - Spring Data JPA
-  - Spring Security (basic setup)
+  - Spring Security (with Keycloak integration)
   - Spring for Apache Kafka
 - PostgreSQL
 - Apache Kafka & Zookeeper
+- Keycloak (for authentication and authorization)
 - Docker & Docker Compose
 - Lombok (for boilerplate code reduction)
 - JUnit 5 (for testing)
@@ -67,6 +74,19 @@ learning/
 ### Prerequisites
 - Docker & Docker Compose installed
 - Java 17 and Maven (for local development)
+
+### Environment Variables
+
+You may need to configure the following environment variables (or update the YAML configs):
+
+- `SPRING_DATASOURCE_URL`
+- `SPRING_DATASOURCE_USERNAME`
+- `SPRING_DATASOURCE_PASSWORD`
+- `KAFKA_BOOTSTRAP_SERVERS`
+- `KEYCLOAK_AUTH_SERVER_URL`
+- `KEYCLOAK_REALM`
+- `KEYCLOAK_RESOURCE` (client ID)
+- `KEYCLOAK_CREDENTIALS_SECRET` (if using confidential client)
 
 ### Running with Docker Compose
 
@@ -83,13 +103,21 @@ learning/
    - PostgreSQL (port 5432)
    - Zookeeper (port 2181)
    - Kafka (port 9092)
+   - Keycloak (port 8081, default admin: admin/admin)
    - Spring Boot app (port 8080)
 
 3. The API will be available at `http://localhost:8080`
+4. Keycloak will be available at `http://localhost:8081/auth` (or as configured)
+
+### Keycloak Setup
+
+- The `src/main/resources/keycloak backup/` directory contains example realm and user JSON files for Keycloak import.
+- On first run, you can import these files into Keycloak via the admin console to quickly set up realms, clients, and users for development.
+- Update your application YAML files to match the Keycloak realm, client, and endpoints as needed.
 
 ### Running Locally (without Docker)
 
-1. Ensure PostgreSQL and Kafka are running locally and update `src/main/resources/application-local.yaml` accordingly.
+1. Ensure PostgreSQL, Kafka, and Keycloak are running locally and update `src/main/resources/application-local.yaml` accordingly.
 2. Build and run the app:
    ```sh
    ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
@@ -98,15 +126,17 @@ learning/
 ## API Endpoints
 
 ### Todo API
-- `GET /api/todos` — List all todos
-- `GET /api/todos/{id}` — Get todo by ID
-- `POST /api/todos` — Create new todo
-- `PUT /api/todos/{id}` — Update existing todo
-- `DELETE /api/todos/{id}` — Delete todo
+- `GET /api/todos` — List all todos (requires authentication)
+- `GET /api/todos/{id}` — Get todo by ID (requires authentication)
+- `POST /api/todos` — Create new todo (requires authentication)
+- `PUT /api/todos/{id}` — Update existing todo (requires authentication)
+- `DELETE /api/todos/{id}` — Delete todo (requires authentication)
 
 ### Kafka API
-- `POST /kafka/send?message=Hello` — Send a message to Kafka
-- `GET /kafka/messages` — Retrieve consumed messages
+- `POST /kafka/send?message=Hello` — Send a message to Kafka (requires authentication)
+- `GET /kafka/messages` — Retrieve consumed messages (requires authentication)
+
+> **Note:** All endpoints are protected by Keycloak authentication. Obtain a valid access token from Keycloak and include it in the `Authorization: Bearer <token>` header for API requests.
 
 ## Testing
 
@@ -125,3 +155,7 @@ Run tests with Maven:
 
 This project does not currently specify a license. Please add a license file if you intend to open source this project.
 
+---
+
+**Contact:**  
+For questions or support, please open an issue or contact the maintainer.
