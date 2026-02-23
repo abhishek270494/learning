@@ -103,11 +103,11 @@ You may need to configure the following environment variables (or update the YAM
    - PostgreSQL (port 5432)
    - Zookeeper (port 2181)
    - Kafka (port 9092)
-   - Keycloak (port 8081, default admin: admin/admin)
+   - Keycloak (port 8008, default admin: admin/admin)
    - Spring Boot app (port 8080)
 
 3. The API will be available at `http://localhost:8080`
-4. Keycloak will be available at `http://localhost:8081/auth` (or as configured)
+4. Keycloak will be available at `http://localhost:8008/auth` (or as configured)
 
 ### Keycloak Setup
 
