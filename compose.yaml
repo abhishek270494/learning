@@ -67,7 +67,7 @@ services:
       - "8080:8080"
 
   jenkins:
-    image: jenkins/jenkins:lts
+    build: ./jenkins
     container_name: jenkins
     restart: always
     user: root
